@@ -1,5 +1,5 @@
 export default function dayOne(input: string) {
-    const wordDigit = /([0-9])|(one)|(two)|(three)|(four)|(five)|(six)|(seven)|(eight)|(nine)|(\n)/g;
+    const wordDigit = /(one)|(two)|(three)|(four)|(five)|(six)|(seven)|(eight)|(nine)|([0-9])|(\n)/g;
     let total = 0;
     let lastDigit = 0;
 
@@ -7,15 +7,14 @@ export default function dayOne(input: string) {
     while ((out = wordDigit.exec(input)) !== null) {
         const match = out[0];
 
-        if (match === '\n') {
+        if (out[11]) {
             total += lastDigit;
             lastDigit = 0;
             continue;
         }
 
-        const digit = isNaN(match) ? out.slice(1).indexOf(match) : +match;
-
-        if (match.length > 1) wordDigit.lastIndex -= match.length - 1;
+        const digit = match[1] ? out.indexOf(match, 1) : +match;
+        if (match[1]) wordDigit.lastIndex -= 1;
 
         if (!lastDigit) total += digit * 10;
         lastDigit = digit;

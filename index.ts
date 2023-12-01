@@ -17,6 +17,7 @@ function runSolution() {
 
 const run = runSolution();
 if (process.env.RUNS && !isNaN(process.env.RUNS)) {
+    let start = performance.now();
     let runCount = +(process.env.RUNS);
 
     const runs: ReturnType<typeof runSolution>[] = [];
@@ -25,8 +26,8 @@ if (process.env.RUNS && !isNaN(process.env.RUNS)) {
     }
 
     const avgRuntime = runs.reduce((acc, curr) => acc + curr.runtime, 0) / runs.length / 1000;
-    console.log(`Ran solution ${runs.length} times, at an average of ${avgRuntime.toFixed(2)}ms per run.`);
-    console.log(`Got result: ${run.result}`);
+    console.log(`Ran solution ${runs.length} times in ${(performance.now() - start).toFixed(2)}ms, at an average of ${avgRuntime.toFixed(2)}ms per run.`);
+    console.log(`Result: ${run.result}`);
 }
 else {
     console.log(`Got result: ${run.result} - (in ${(run.runtime / 1000).toFixed(2)}ms)`);
