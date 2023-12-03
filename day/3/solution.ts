@@ -1,18 +1,14 @@
 export default function(input: string) {
     const width = input.indexOf('\n');
-    let total = 0, index = -1;
+    let total = 0, index = input.indexOf('*');
 
-    do {
-        index = input.indexOf('*', index + 1);
+    while (index >= 0) {
         const surroundingIndices = [
-            // ... Top 3,
             index - (width + 2),
             index - (width + 1),
             index - (width + 0),
-            // .*. Left and right
             index - 1,
             index + 1,
-            // ... Bottom 3
             index + (width + 0),
             index + (width + 1),
             index + (width + 2),
@@ -20,30 +16,26 @@ export default function(input: string) {
 
         const surrounding =
             surroundingIndices
-                // .filter(index => input[index] !== '.')
                 .filter((index, i, arr) =>
                     input[index] !== '.' &&
-                    // This is equivalent to the below commented filter,
-                    // moving it here, in this messy way, speeds things up.
                     (
+                        // Not the first
                         i === 0 ||
+                        // Not part of an existing number
                         (input[arr[i - 1]] === '.' || arr[i - 1] !== index - 1)
                     )
-                )
-                .map(index => ({ index, character: input[index] }))
-                // .filter((o, i, arr) => {
-                //     if (i <= 0) return true;
-                //     return arr[i - 1].index !== o.index - 1;
-                // });
+                );
+
 
         if (surrounding.length === 2) {
-            const first = traverseNumber(surrounding[0].index, input);
-            const second = traverseNumber(surrounding[1].index, input);
+            const first = traverseNumber(surrounding[0], input);
+            const second = traverseNumber(surrounding[1], input);
             const ratio = first * second;
             total += ratio;
         }
+
+        index = input.indexOf('*', index + 1);
     }
-    while (index > 0);
 
     return total;
 }
