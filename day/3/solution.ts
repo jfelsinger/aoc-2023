@@ -1,3 +1,19 @@
+//  1..  ..0  11.  .1.  .11
+//  .*.  0*0  0*0  0*0  0*0
+//  ...  000  000  000  000
+
+//  ...  000
+//  1*.  .*0
+//  ...  000
+
+//  ...  000
+//  .*1  .*0
+//  ...  000
+
+//  ...  000  000  000  000
+//  .*.  0*0  0*0  0*0  0*0
+//  1..  ..0  11.  .1.  .11
+
 export default function(input: string) {
     const width = input.indexOf('\n');
     let total = 0, index = input.indexOf('*');
@@ -14,22 +30,49 @@ export default function(input: string) {
             index + (width + 2),
         ];
 
-        const surrounding =
-            surroundingIndices
-                .filter((index, i, arr) =>
-                    input[index] !== '.' &&
-                    (
-                        // Not the first
-                        i === 0 ||
-                        // Not part of an existing number
-                        (input[arr[i - 1]] === '.' || arr[i - 1] !== index - 1)
-                    )
-                );
+        let firstIndex = 0;
+        let secondIndex = 0;
+        let i = 0;
 
+        while (firstIndex === 0) {
+            if (input[surroundingIndices[i++]] !== '.') {
+                firstIndex = surroundingIndices[i - 1];
+                break;
+            }
+        }
 
-        if (surrounding.length === 2) {
-            const first = traverseNumber(surrounding[0], input);
-            const second = traverseNumber(surrounding[1], input);
+        outsideSwitch: switch(i) {
+            case 3:
+            case 4:
+            case 5:
+                while (i < surroundingIndices.length) {
+                    if (input[surroundingIndices[i]] !== '.') {
+                        secondIndex = surroundingIndices[i];
+                        break outsideSwitch;
+                    }
+                    i++;
+                }
+                break;
+
+            default:
+                while (i < surroundingIndices.length) {
+                    if (input[surroundingIndices[i]] !== '.') {
+                        if (
+                            input[surroundingIndices[i - 1]] === '.' ||
+                            surroundingIndices[i - 1] !== surroundingIndices[i] - 1
+                        ) {
+                            secondIndex = surroundingIndices[i];
+                            break outsideSwitch;
+                        }
+                    }
+                    i++;
+                }
+                break;
+        }
+
+        if (secondIndex) {
+            const first = traverseNumber(firstIndex, input);
+            const second = traverseNumber(secondIndex, input);
             const ratio = first * second;
             total += ratio;
         }
