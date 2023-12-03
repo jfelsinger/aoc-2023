@@ -1,9 +1,9 @@
 export default function(input: string) {
     const width = input.indexOf('\n');
-    let total = 0, index = 0;
+    let total = 0, index = -1;
 
     do {
-        index = input.indexOf('*', index);
+        index = input.indexOf('*', index + 1);
         const surroundingIndices = [
             // ... Top 3,
             index - (width + 2),
@@ -42,8 +42,6 @@ export default function(input: string) {
             const ratio = first * second;
             total += ratio;
         }
-
-        index++;
     }
     while (index > 0);
 
