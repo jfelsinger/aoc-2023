@@ -16,6 +16,7 @@ Card 6: 31 18 13 56 72 | 74 77 10 23 35 67 36 11
 
 export default function day4(input: string) {
     // console.log(input);
+    input = input.trim();
     const prefixLength = input.indexOf(':') + 1;
     const width = input.indexOf('\n');
 
